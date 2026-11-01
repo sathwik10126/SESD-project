@@ -1,0 +1,74 @@
+EDULINK — PATCHED PROJECT NOTES
+================================
+
+What was corrected
+------------------
+1. Fixed the email login/register submit handler in script.js:
+   - The submit listener is attached to document.
+   - In a delegated document listener, event.currentTarget is document.
+   - handleAuth now reads event.target (the submitted HTMLFormElement)
+     and checks its type before constructing FormData.
+2. Kept the existing frontend, CSS, FastAPI routes, PostgreSQL models,
+   Google Sign-In integration, and project structure.
+3. Removed backend/.env and backend/.venv from this ZIP for safety and
+   portability. Never distribute a .env file or a Python virtualenv.
+
+Important Google Sign-In setup
+------------------------------
+The Google 403 message "The given origin is not allowed for the given
+client ID" cannot be fixed by JavaScript alone. In Google Cloud Console,
+open Google Auth Platform > Clients > your Web OAuth client and add the
+exact origin you use to open the frontend under Authorized JavaScript
+origins. Examples:
+  https://sathwik10126.github.io
+  http://127.0.0.1:5500
+  http://localhost:5500
+
+Origins do not include a path such as /EduLink/ or /index.html.
+The Client ID in config.js and backend/.env must match your Google client.
+
+Windows setup
+-------------
+1. Install/start Docker Desktop.
+2. Open a PowerShell terminal in the extracted EduLink-main folder:
+     docker compose up -d postgres
+3. Open a second terminal:
+     cd backend
+     Copy-Item .env.example .env
+     python -m venv .venv
+     .\.venv\Scripts\Activate.ps1
+     python -m pip install --upgrade pip
+     pip install -r requirements.txt
+4. Open backend/.env and replace SECRET_KEY with a newly generated value:
+     python -c "import secrets; print(secrets.token_urlsafe(48))"
+   Put the generated value after SECRET_KEY= in backend/.env.
+   Ensure DATABASE_URL password matches POSTGRES_PASSWORD in
+   docker-compose.yml. The supplied development default is change-me.
+5. Start FastAPI from the backend folder:
+     python -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
+6. Open http://127.0.0.1:8000/health. Expected:
+     {"status":"healthy"}
+7. Open the project root index.html with VS Code Live Server.
+   config.js is set to http://127.0.0.1:8000.
+
+Important hosting limitation
+-----------------------------
+GitHub Pages only hosts the static frontend. This project's config.js
+points to a backend on 127.0.0.1:8000, so API features work only in a
+browser on the same computer while its FastAPI server and PostgreSQL
+are running. Other visitors' 127.0.0.1 refers to their own computer.
+This is not a public multi-user backend deployment.
+
+Validation performed while preparing this ZIP
+----------------------------------------------
+- JavaScript syntax check passed with Node.js --check.
+- All Python source files passed Python AST syntax parsing.
+- Full pytest/API integration tests were NOT executed in this environment.
+- Google OAuth origin authorization must be completed in your Google
+  Cloud Console; it depends on your own project/domain settings.
+
+Existing user/database records
+------------------------------
+The ZIP contains source code only, not your PostgreSQL database volume.
+Your existing test account remains in your local Docker PostgreSQL volume
+if you continue using the same Docker volume on your laptop.

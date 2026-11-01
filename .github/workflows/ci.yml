@@ -1,0 +1,38 @@
+name: EduLink CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    env:
+      DATABASE_URL: sqlite+pysqlite:///./ci_edulink.db
+      SECRET_KEY: ci-test-secret
+      GOOGLE_CLIENT_ID: test-client-id
+      FRONTEND_ORIGINS: http://localhost:5500
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      - name: Python compile check
+        working-directory: backend
+        run: python -m compileall -q .
+
+      - name: Run tests
+        working-directory: backend
+        run: pytest -q

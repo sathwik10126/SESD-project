@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Local databases / generated files
+*.db
+*.sqlite
+*.sqlite3
+backend/edulink_migration_dev.db
+backend/test_edulink.db
+
+# Node/editor/OS
+node_modules/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+backend/.env

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduLink — Smart Student Help & Information Hub</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header class="topbar">
+
+  <div class="top-left">
+    <button class="icon-btn mobile-menu" id="mobileMenu">☰</button>
+
+    <button class="brand" data-page="dashboard">
+      <span class="brand-mark">E</span>
+      <span>EduLink</span>
+    </button>
+  </div>
+
+  <div class="search-box">
+    <span>⌕</span>
+    <input
+      id="searchInput"
+      type="search"
+      placeholder="Search questions, resources, notices..."
+    >
+    <kbd>Ctrl K</kbd>
+  </div>
+
+  <div class="top-actions">
+
+    <button
+      class="icon-btn"
+      id="notificationBtn"
+      title="Notifications"
+    >
+      ♡
+    </button>
+
+    <button class="profile-mini" data-page="profile">
+      <span class="avatar" id="topAvatar">G</span>
+      <span class="profile-name" id="topProfileName">Guest</span>
+    </button>
+
+    <button
+      class="btn secondary small logout-top hidden"
+      data-action="logout"
+    >
+      Logout
+    </button>
+
+  </div>
+
+</header>
+
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+
+    <nav class="nav-section">
+
+      <p class="nav-title">EDULINK</p>
+
+      <button class="nav-item active" data-page="dashboard">
+        <span>⌂</span>
+        Dashboard
+      </button>
+
+      <button class="nav-item" data-page="ask">
+        <span>＋</span>
+        Ask Question
+      </button>
+
+      <button class="nav-item" data-page="questions">
+        <span>?</span>
+        Questions & Answers
+      </button>
+
+      <button class="nav-item" data-page="search">
+        <span>⌕</span>
+        Search
+      </button>
+
+      <button class="nav-item" data-page="resources">
+        <span>▣</span>
+        Resources
+      </button>
+
+    </nav>
+
+
+    <nav class="nav-section">
+
+      <p class="nav-title">COLLEGE</p>
+
+      <button class="nav-item" data-page="procedures">
+        <span>☷</span>
+        Procedures
+      </button>
+
+      <button class="nav-item" data-page="notices">
+        <span>▤</span>
+        Notices
+      </button>
+
+    </nav>
+
+
+    <nav class="nav-section">
+
+      <p class="nav-title">COMMUNITY</p>
+
+      <button class="nav-item" data-page="help">
+        <span>♧</span>
+        Help Requests
+      </button>
+
+    </nav>
+
+
+    <nav class="nav-section">
+
+      <p class="nav-title">MY ACTIVITY</p>
+
+      <button class="nav-item" data-page="profile">
+        <span>◎</span>
+        Profile
+      </button>
+
+      <button class="nav-item" data-page="saved">
+        <span>☆</span>
+        Saved Items
+      </button>
+
+    </nav>
+
+
+    <!-- ADMIN -->
+    <nav
+      class="nav-section admin-nav hidden"
+      id="adminNav"
+    >
+
+      <p class="nav-title">ADMINISTRATION</p>
+
+      <button class="nav-item" data-page="admin">
+        <span>⚙</span>
+        Admin Dashboard
+      </button>
+
+    </nav>
+
+
+    <!-- COMMUNITIES -->
+    <div class="sidebar-communities">
+
+      <div class="section-heading">
+
+        <span>Communities</span>
+
+        <button
+          class="small-add"
+          data-action="create-community"
+        >
+          +
+        </button>
+
+      </div>
+
+      <div id="communityList"></div>
+
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN CONTENT -->
+  <main
+    class="main-content"
+    id="content"
+  ></main>
+
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="rightbar">
+
+    <section class="info-card">
+
+      <div class="card-title">
+        Today at College
+      </div>
+
+      <div
+        id="todayEvents"
+        class="right-empty"
+      ></div>
+
+    </section>
+
+
+    <section class="info-card">
+
+      <div class="card-title">
+        Trending Topics
+      </div>
+
+      <div
+        id="trendingTopics"
+        class="right-empty"
+      ></div>
+
+    </section>
+
+
+    <section class="info-card">
+
+      <div class="card-title">
+        Popular on EduLink
+      </div>
+
+      <div
+        id="popularContent"
+        class="right-empty"
+      ></div>
+
+    </section>
+
+  </aside>
+
+</div>
+
+
+<!-- MODAL -->
+<div
+  class="modal-overlay hidden"
+  id="modalOverlay"
+>
+
+  <div
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+  >
+
+    <div class="modal-header">
+
+      <h2 id="modalTitle">
+        EduLink
+      </h2>
+
+      <button
+        class="modal-close"
+        id="modalClose"
+      >
+        ×
+      </button>
+
+    </div>
+
+
+    <form id="modalForm">
+
+      <div id="modalFields"></div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn secondary"
+          id="cancelModal"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn primary"
+        >
+          Save
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- TOAST -->
+<div
+  class="toast hidden"
+  id="toast"
+></div>
+
+
+<script src="config.js"></script>
+<script src="script.js"></script>
+<script
+    src="https://accounts.google.com/gsi/client"
+    async
+    defer
+></script>
+</body>
+</html>
