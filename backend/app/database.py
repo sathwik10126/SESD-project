@@ -3,6 +3,7 @@
 
 import logging
 import os
+import traceback
 from collections.abc import Generator
 from pathlib import Path
 
@@ -16,26 +17,23 @@ from sqlalchemy.orm import (
     sessionmaker,
 )
 
-# Load local environment variables.
-# Render environment variables take precedence over .env values.
+# Load environment variables from backend/.env when running locally.
 load_dotenv(Path(__file__).resolve().parent.parent / ".env")
 
+# Configure logging.
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+# --------------------------------------------------
+# DATABASE URL
+# --------------------------------------------------
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 
-class Base(DeclarativeBase):
-    """Base class for all SQLAlchemy models."""
-
-    pass
-
-
 def normalize_database_url(url: str | None) -> str | None:
-    """
-    Normalize PostgreSQL URLs to use the psycopg 3 driver.
-    Supports Render PostgreSQL connection URLs.
-    """
+    """Convert PostgreSQL URLs to the psycopg driver format."""
 
     if not url:
         return None
@@ -49,6 +47,18 @@ def normalize_database_url(url: str | None) -> str | None:
     return url
 
 
+# --------------------------------------------------
+# SQLALCHEMY BASE
+# --------------------------------------------------
+
+class Base(DeclarativeBase):
+    pass
+
+
+# --------------------------------------------------
+# DATABASE ENGINE
+# --------------------------------------------------
+
 def get_engine(database_url: str | None = None):
     """Create the SQLAlchemy database engine."""
 
@@ -57,6 +67,7 @@ def get_engine(database_url: str | None = None):
     )
 
     if not url:
+        logger.error("DATABASE_URL is not configured.")
         return None
 
     return create_engine(
@@ -66,7 +77,7 @@ def get_engine(database_url: str | None = None):
     )
 
 
-# Initialize engine.
+# Create engine and session factory.
 engine = get_engine(DATABASE_URL)
 
 SessionLocal = (
@@ -81,8 +92,12 @@ SessionLocal = (
 )
 
 
+# --------------------------------------------------
+# DATABASE SESSION
+# --------------------------------------------------
+
 def get_db() -> Generator[Session, None, None]:
-    """Provide a database session for each request."""
+    """Provide a database session to FastAPI routes."""
 
     global engine, SessionLocal
 
@@ -101,11 +116,9 @@ def get_db() -> Generator[Session, None, None]:
                 )
 
     if SessionLocal is None:
-        logger.error("DATABASE_URL is not configured.")
-
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Database is not configured.",
+            detail="Database is not configured. Set DATABASE_URL on the server.",
         )
 
     db = SessionLocal()
@@ -129,14 +142,22 @@ def get_db() -> Generator[Session, None, None]:
         db.close()
 
 
+# --------------------------------------------------
+# DATABASE INITIALIZATION
+# --------------------------------------------------
+
 def initialize_database() -> bool:
     """
     Test the database connection and create missing tables.
-    Detailed errors are written to the application logs.
+
+    Detailed errors are printed to Render application logs.
     """
 
     global engine, SessionLocal
 
+    print("\n========== EDULINK DATABASE INITIALIZATION ==========")
+
+    # Create engine if it does not exist.
     if engine is None:
         current_url = os.getenv("DATABASE_URL")
 
@@ -151,34 +172,51 @@ def initialize_database() -> bool:
                     expire_on_commit=False,
                 )
 
+    # Check whether DATABASE_URL exists.
     if engine is None:
+        print("ERROR: DATABASE_URL is missing or invalid.")
         logger.error(
             "DATABASE_URL is missing. Database initialization skipped."
         )
         return False
 
     try:
-        # Import models so SQLAlchemy registers all database tables.
+        # Import models so SQLAlchemy registers all tables.
         from app import models  # noqa: F401
+
+        print("Step 1: Models imported successfully.")
 
         # Test PostgreSQL connectivity.
         with engine.connect() as connection:
             connection.exec_driver_sql("SELECT 1")
 
+        print("Step 2: PostgreSQL connection successful.")
+
         logger.info(
             "PostgreSQL connection established successfully."
         )
 
-        # Create missing tables.
+        # Create missing database tables.
         Base.metadata.create_all(bind=engine)
+
+        print("Step 3: Database tables created successfully.")
 
         logger.info(
             "EduLink database initialized successfully."
         )
 
+        print("========== DATABASE INITIALIZATION SUCCESS ==========\n")
+
         return True
 
-    except Exception:
+    except Exception as exc:
+        # Print the original exception directly into Render logs.
+        print("\n========== DATABASE INITIALIZATION FAILED ==========")
+        print("ERROR TYPE:", type(exc).__name__)
+        print("ERROR MESSAGE:", str(exc))
+        traceback.print_exc()
+        print("=====================================================\n")
+
         logger.exception(
             "DATABASE INITIALIZATION FAILED."
         )
