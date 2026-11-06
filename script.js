@@ -759,301 +759,158 @@ function showDashboard() {
                     ""
                 ).split(" ")[0]
             )
-            : "";
+            : "there";
 
-    const welcomeAction = currentUser
-        ? '<button class="store-dark-btn" data-action="ask-question">Ask a question</button>'
-        : '<button class="store-dark-btn" data-action="login">Login / Register</button>';
+
+    const questions =
+        cachedData.questions;
+
 
     content.innerHTML = `
-        <section class="store-home">
 
-            <div class="store-announcement">
-                Help desk is open Mon-Sat, 9:30 AM to 4:30 PM · Mid-1 hall tickets are now available
-            </div>
+        <div class="welcome-grid">
 
-            <div class="store-hero">
+            <section class="welcome-panel">
 
-                <div class="store-hero-copy">
+                <h1>
+                    Welcome
+                    ${
+                        currentUser
+                            ? `, ${firstName}`
+                            : ""
+                    }
+                    👋
+                </h1>
 
-                    <div class="eyebrow">EduLink · Student help and information hub</div>
+                <p>
+                    EduLink brings student questions,
+                    answers, academic resources and
+                    college information into one place.
+                </p>
 
-                    <h1>Every answer your campus needs.</h1>
+                <div class="action-row">
 
-                    <p>
-                        Ask seniors and staff about exams, fees, hostels and certificates,
-                        or find the official steps for any college procedure.
-                    </p>
+                    ${
+                        currentUser
 
-                    <div class="store-search">
-                        <span>⌕</span>
-                        <input id="dashboardSearch" type="search"
-                            placeholder='Search "bonafide certificate"'
-                            aria-label="Search EduLink">
-                        <button type="button" data-dashboard-search>Search</button>
-                    </div>
+                            ? `
+                                <button
+                                    class="btn primary"
+                                    data-action="ask-question"
+                                >
+                                    + Ask a Question
+                                </button>
+                            `
 
-                    <div class="store-chips">
-                        <button type="button" data-search-chip="Hall ticket">Hall ticket</button>
-                        <button type="button" data-search-chip="Attendance condonation">Attendance condonation</button>
-                        <button type="button" data-search-chip="Scholarship">Scholarship</button>
-                        <button type="button" data-search-chip="Hostel mess">Hostel mess</button>
-                        <button type="button" data-search-chip="Fee receipt">Fee receipt</button>
-                    </div>
+                            : `
+                                <button
+                                    class="btn primary"
+                                    data-action="login"
+                                >
+                                    Login / Register
+                                </button>
+                            `
+                    }
 
-                    <div class="store-actions">
-                        ${welcomeAction}
-                        <button class="store-outline-btn" data-page="questions">Browse questions</button>
-                    </div>
 
-                </div>
-
-                <div class="store-notices">
-
-                    <article class="store-feature">
-                        <span>Notice · Examination branch</span>
-                        <h2>Mid-1 timetable released for all branches</h2>
-                        <button data-page="notices">Read notice</button>
-                    </article>
-
-                    <article class="store-mini-notice">
-                        <div>
-                            <span>Fee deadline</span>
-                            <h3>Last date without fine</h3>
-                        </div>
-                        <strong><b>20</b><small>NOV</small></strong>
-                    </article>
-
-                    <article class="store-mini-notice">
-                        <div>
-                            <span>Scholarship</span>
-                            <h3>Income certificate upload</h3>
-                        </div>
-                        <strong><b>28</b><small>NOV</small></strong>
-                    </article>
-
-                </div>
-
-            </div>
-
-            <section class="store-section">
-
-                <div class="store-section-head">
-                    <div>
-                        <h2>Find what you need.</h2>
-                        <p>Browse common college topics and student questions.</p>
-                    </div>
-                </div>
-
-                <div class="store-category-grid">
-                    <button class="store-category" data-page="questions"><span>◫</span><strong>Exams</strong><small>184 questions</small></button>
-                    <button class="store-category" data-page="questions"><span>₹</span><strong>Fees</strong><small>96 questions</small></button>
-                    <button class="store-category" data-page="questions"><span>⌂</span><strong>Hostel</strong><small>72 questions</small></button>
-                    <button class="store-category" data-page="questions"><span>□</span><strong>Certificates</strong><small>128 questions</small></button>
-                    <button class="store-category" data-page="questions"><span>↗</span><strong>Placements</strong><small>64 questions</small></button>
-                    <button class="store-category" data-page="resources"><span>▤</span><strong>Library</strong><small>31 questions</small></button>
-                </div>
-
-            </section>
-
-            <section class="store-section" id="dashboardQuestions">
-
-                <div class="store-section-head questions-head">
-                    <div>
-                        <h2>Questions from students</h2>
-                        <p>Common questions around everyday campus life.</p>
-                    </div>
-
-                    <div class="store-tabs">
-                        <button class="active" data-dashboard-filter="all">Trending</button>
-                        <button data-dashboard-filter="open">Needs an answer</button>
-                        <button data-dashboard-filter="answered">Answered</button>
-                    </div>
-                </div>
-
-                <div class="store-question-grid">
-
-                    <article class="store-question" data-qstatus="answered" data-qtext="exam hall ticket mid 1 download">
-                        <div class="store-question-cover blue"><strong>Exams</strong><span>Answered</span></div>
-                        <div class="store-question-body">
-                            <h3>How do I download my Mid-1 hall ticket?</h3>
-                            <p>Find the hall ticket download option and the steps students normally follow in the portal.</p>
-                            <footer><b class="green">6 answers</b><span>2 hours ago</span></footer>
-                        </div>
-                    </article>
-
-                    <article class="store-question" data-qstatus="open" data-qtext="fees fine tuition fee 20-11-2026">
-                        <div class="store-question-cover peach"><strong>Fees</strong><span>Open</span></div>
-                        <div class="store-question-body">
-                            <h3>Is there a fine if tuition fee is paid after 20-11-2026?</h3>
-                            <p>Students are looking for the exact late payment rule and final date for semester fees.</p>
-                            <footer><b class="amber">Needs an answer</b><span>4 hours ago</span></footer>
-                        </div>
-                    </article>
-
-                    <article class="store-question" data-qstatus="answered" data-qtext="attendance minimum condonation">
-                        <div class="store-question-cover mint"><strong>Attendance</strong><span>Answered</span></div>
-                        <div class="store-question-body">
-                            <h3>What is the minimum attendance for condonation?</h3>
-                            <p>Students want to understand the minimum attendance percentage required for condonation.</p>
-                            <footer><b class="green">4 answers</b><span>Yesterday</span></footer>
-                        </div>
-                    </article>
-
-                    <article class="store-question" data-qstatus="open" data-qtext="hostel mess day scholars weekends">
-                        <div class="store-question-cover lilac"><strong>Hostel</strong><span>Open</span></div>
-                        <div class="store-question-body">
-                            <h3>Can day scholars take the hostel mess on weekends?</h3>
-                            <p>Can students who do not stay in the hostel use the mess service on Saturdays and Sundays?</p>
-                            <footer><b class="amber">Needs an answer</b><span>Yesterday</span></footer>
-                        </div>
-                    </article>
-
-                    <article class="store-question" data-qstatus="answered" data-qtext="bonafide certificate days">
-                        <div class="store-question-cover yellow"><strong>Certificates</strong><span>Answered</span></div>
-                        <div class="store-question-body">
-                            <h3>How many days does a bonafide certificate take?</h3>
-                            <p>Students need the expected processing time for scholarship and other official applications.</p>
-                            <footer><b class="green">8 answers</b><span>2 days ago</span></footer>
-                        </div>
-                    </article>
-
-                    <article class="store-question" data-qstatus="open" data-qtext="library reference books overnight final year">
-                        <div class="store-question-cover teal"><strong>Library</strong><span>Open</span></div>
-                        <div class="store-question-body">
-                            <h3>Can final year students borrow reference books overnight?</h3>
-                            <p>Final year students want to know whether reference books can be taken overnight for projects.</p>
-                            <footer><b class="amber">Needs an answer</b><span>3 days ago</span></footer>
-                        </div>
-                    </article>
-
-                </div>
-
-            </section>
-
-            <section class="store-dark-section">
-
-                <div>
-                    <h2>Official notices, in one place</h2>
-                    <p>Examination schedules, fee deadlines, certificates and important college circulars without searching through messages.</p>
-                    <button class="store-light-btn" data-page="notices">View all notices</button>
-                </div>
-
-                <div class="store-notice-list">
-
-                    <button class="store-notice-row" data-page="notices">
-                        <strong>06<small>NOV</small></strong>
-                        <span><b>Mid-1 timetable released for all branches</b><small>Examination branch · PDF</small></span>
-                        <em>New</em>
-                    </button>
-
-                    <button class="store-notice-row" data-page="notices">
-                        <strong>20<small>NOV</small></strong>
-                        <span><b>Tuition fee payment deadline</b><small>Accounts section · Circular</small></span>
-                        <em>Due 20-11-2026</em>
-                    </button>
-
-                    <button class="store-notice-row" data-page="notices">
-                        <strong>28<small>NOV</small></strong>
-                        <span><b>Scholarship income certificate upload</b><small>Student welfare · Circular</small></span>
-                        <em>Circular</em>
-                    </button>
-
-                    <button class="store-notice-row" data-page="notices">
-                        <strong>30<small>NOV</small></strong>
-                        <span><b>Semester certificate applications</b><small>Academic section · PDF</small></span>
-                        <em>Open</em>
+                    <button
+                        class="btn secondary"
+                        data-page="questions"
+                    >
+                        Browse Questions
                     </button>
 
                 </div>
 
             </section>
 
-            <section class="store-section">
 
-                <div class="store-section-head">
-                    <div>
-                        <h2>People who need a hand</h2>
-                        <p>Help another student with something you already know.</p>
-                    </div>
+            <section class="quick-links">
 
-                    <button class="store-outline-btn" data-page="help">Post a request</button>
-                </div>
+                <h3>
+                    Explore EduLink
+                </h3>
 
-                <div class="store-help-grid">
 
-                    <article class="store-help">
-                        <span>Scholarship</span>
-                        <h3>Need help understanding the scholarship income certificate format.</h3>
-                        <div><b>SK</b><p><strong>Sai Kiran</strong><small>CSE · II year</small></p></div>
-                    </article>
+                <button
+                    class="quick-link"
+                    data-page="resources"
+                >
+                    <span>Resources</span>
+                    <span>→</span>
+                </button>
 
-                    <article class="store-help">
-                        <span>Hostel</span>
-                        <h3>Looking for someone who can explain the hostel room change process.</h3>
-                        <div><b>RM</b><p><strong>Rahul M</strong><small>ECE · III year</small></p></div>
-                    </article>
 
-                    <article class="store-help">
-                        <span>Certificates</span>
-                        <h3>Need guidance on applying for a bonafide certificate.</h3>
-                        <div><b>AP</b><p><strong>Ananya P</strong><small>AIML · II year</small></p></div>
-                    </article>
+                <button
+                    class="quick-link"
+                    data-page="procedures"
+                >
+                    <span>Procedures</span>
+                    <span>→</span>
+                </button>
 
-                </div>
+
+                <button
+                    class="quick-link"
+                    data-page="notices"
+                >
+                    <span>Notices</span>
+                    <span>→</span>
+                </button>
+
+
+                <button
+                    class="quick-link"
+                    data-page="help"
+                >
+                    <span>Help Requests</span>
+                    <span>→</span>
+                </button>
 
             </section>
 
-        </section>
+        </div>
+
+
+        <div class="page-header">
+
+            <h1>
+                Community Activity
+            </h1>
+
+            <p>
+                Content appears here only after
+                students or college staff add it.
+            </p>
+
+        </div>
+
+
+        ${
+            questions.length
+
+                ? renderQuestionList(
+                    questions.slice(0, 5)
+                )
+
+                : emptyState(
+                    "?",
+                    "No questions yet",
+                    "EduLink has no questions yet. " +
+                    "Start the first discussion when you are ready.",
+                    currentUser
+                        ? "Ask the First Question"
+                        : "Login / Register",
+                    currentUser
+                        ? "ask-question"
+                        : "login"
+                )
+        }
+
     `;
 
+
     updateRightSidebar();
-
-    const dashInput = document.getElementById("dashboardSearch");
-
-    function filterDashboardQuestions(query) {
-        const q = (query || "").trim().toLowerCase();
-        document.querySelectorAll(".store-question").forEach(card => {
-            const text = (card.dataset.qtext || "") + " " + card.innerText.toLowerCase();
-            card.style.display = !q || text.includes(q) ? "" : "none";
-        });
-    }
-
-    document.querySelectorAll("[data-dashboard-filter]").forEach(button => {
-        button.addEventListener("click", () => {
-            document.querySelectorAll("[data-dashboard-filter]").forEach(b => b.classList.remove("active"));
-            button.classList.add("active");
-            const filter = button.dataset.dashboardFilter;
-            document.querySelectorAll(".store-question").forEach(card => {
-                card.style.display =
-                    filter === "all" || card.dataset.qstatus === filter
-                        ? ""
-                        : "none";
-            });
-        });
-    });
-
-    document.querySelector("[data-dashboard-search]")?.addEventListener("click", () => {
-        filterDashboardQuestions(dashInput?.value);
-        document.getElementById("dashboardQuestions")?.scrollIntoView({ behavior: "smooth" });
-    });
-
-    dashInput?.addEventListener("keydown", event => {
-        if (event.key === "Enter") {
-            filterDashboardQuestions(dashInput.value);
-            document.getElementById("dashboardQuestions")?.scrollIntoView({ behavior: "smooth" });
-        }
-    });
-
-    document.querySelectorAll("[data-search-chip]").forEach(button => {
-        button.addEventListener("click", () => {
-            if (dashInput) {
-                dashInput.value = button.dataset.searchChip;
-                filterDashboardQuestions(dashInput.value);
-                document.getElementById("dashboardQuestions")?.scrollIntoView({ behavior: "smooth" });
-            }
-        });
-    });
 }
 
 
@@ -5076,49 +4933,3 @@ async function initialize() {
 ========================================================= */
 
 initialize();
-
-
-/* =========================================================
-   PROFESSIONAL THEME TOGGLE
-========================================================= */
-
-(function initEduLinkTheme() {
-    const root = document.documentElement;
-    const toggle = document.getElementById("themeToggle");
-
-    if (!toggle) return;
-
-    const saved = localStorage.getItem("edulink-theme");
-    if (saved === "dark" || saved === "light") {
-        root.setAttribute("data-theme", saved);
-    }
-
-    const updateIcon = () => {
-        const theme = root.getAttribute("data-theme");
-        toggle.textContent = theme === "dark" ? "☀" : "◐";
-        toggle.setAttribute(
-            "aria-label",
-            theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
-        );
-    };
-
-    updateIcon();
-
-    toggle.addEventListener("click", () => {
-        const current = root.getAttribute("data-theme");
-        const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-
-        let next;
-        if (current === "dark") {
-            next = "light";
-        } else if (current === "light") {
-            next = "dark";
-        } else {
-            next = systemDark ? "light" : "dark";
-        }
-
-        root.setAttribute("data-theme", next);
-        localStorage.setItem("edulink-theme", next);
-        updateIcon();
-    });
-})();
