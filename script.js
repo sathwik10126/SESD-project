@@ -1449,6 +1449,19 @@ async function refreshData() {
    QUESTION LIST
 ========================================================= */
 
+function canManageQuestion(question) {
+
+    if (!currentUser || !question) {
+        return false;
+    }
+
+    return (
+        currentUser.role === "admin" ||
+        Number(currentUser.id) === Number(question.author_id)
+    );
+}
+
+
 function renderQuestionList(
     list
 ) {
@@ -1540,6 +1553,20 @@ function renderQuestionList(
                                 : "☆ Save"
                         }
                     </button>
+
+                    ${
+                        canManageQuestion(q)
+                            ? `
+                                <button
+                                    class="btn danger small"
+                                    data-action="delete-question"
+                                    data-id="${q.id}"
+                                >
+                                    Delete
+                                </button>
+                            `
+                            : ""
+                    }
 
                 </div>
 
@@ -2037,6 +2064,20 @@ async function showQuestionDetails(
                                 : "☆ Save"
                         }
                     </button>
+
+                    ${
+                        canManageQuestion(q)
+                            ? `
+                                <button
+                                    class="btn danger small"
+                                    data-action="delete-question"
+                                    data-id="${q.id}"
+                                >
+                                    Delete Question
+                                </button>
+                            `
+                            : ""
+                    }
 
                 </div>
 
@@ -3707,6 +3748,63 @@ if (modalForm) {
    QUESTION VOTING
 ========================================================= */
 
+async function deleteQuestion(questionId) {
+
+    const id = Number(questionId);
+
+    if (!Number.isInteger(id)) {
+        showToast("Invalid question.");
+        return;
+    }
+
+    const question =
+        cachedData.questions.find(
+            item => Number(item.id) === id
+        );
+
+    if (question && !canManageQuestion(question)) {
+        showToast("You do not have permission to delete this question.");
+        return;
+    }
+
+    const confirmed = window.confirm(
+        "Delete this question? This will also remove its answers and votes. This action cannot be undone."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    try {
+
+        await apiRequest(
+            `/questions/${id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        cachedData.questions =
+            cachedData.questions.filter(
+                item => Number(item.id) !== id
+            );
+
+        showToast("Question deleted successfully.");
+
+        await showQuestions();
+
+        updateRightSidebar();
+
+    } catch (error) {
+
+        showToast(
+            error.message ||
+            "Could not delete the question."
+        );
+    }
+}
+
+
 async function voteQuestion(
     id,
     value = 1
@@ -4360,6 +4458,15 @@ document.addEventListener(
                 "question",
                 id
             );
+
+        }
+
+
+        else if (
+            type === "delete-question"
+        ) {
+
+            deleteQuestion(id);
 
         }
 
