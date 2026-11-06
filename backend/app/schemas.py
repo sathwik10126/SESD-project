@@ -17,6 +17,10 @@ class RegisterRequest(BaseModel):
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
+    role: str = Field(
+        default="student",
+        pattern="^(student|faculty|admin)$"
+    )
 
 
 class GoogleLoginRequest(BaseModel):
