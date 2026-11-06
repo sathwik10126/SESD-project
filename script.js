@@ -515,7 +515,8 @@ async function registerUser(
 
 async function loginUser(
     email,
-    password
+    password,
+    role
 ) {
 
     const data =
@@ -526,7 +527,8 @@ async function loginUser(
 
                 body: JSON.stringify({
                     email: email,
-                    password: password
+                    password: password,
+                    role: role
                 })
             }
         );
@@ -1096,6 +1098,28 @@ function renderAuthFields(mode) {
             </div>
 
 
+            <div class="form-group">
+
+                <label>
+                    Login as
+                </label>
+
+                <select
+                    name="role"
+                    required
+                >
+                    <option value="student">Student</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="admin">Admin</option>
+                </select>
+
+                <small class="form-help">
+                    Select the role assigned to your EduLink account.
+                </small>
+
+            </div>
+
+
             <div class="auth-divider">
                 <span>or</span>
             </div>
@@ -1319,6 +1343,11 @@ async function handleAuth(event) {
             data.get("password") || ""
         );
 
+    const role =
+        String(
+            data.get("role") || "student"
+        ).trim().toLowerCase();
+
 
     try {
 
@@ -1353,7 +1382,8 @@ async function handleAuth(event) {
 
             await loginUser(
                 email,
-                password
+                password,
+                role
             );
 
 
