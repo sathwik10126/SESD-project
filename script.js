@@ -1588,6 +1588,14 @@ function renderQuestionList(
                         canManageQuestion(q)
                             ? `
                                 <button
+                                    class="btn secondary small"
+                                    data-action="edit-question"
+                                    data-id="${q.id}"
+                                >
+                                    Edit
+                                </button>
+
+                                <button
                                     class="btn danger small"
                                     data-action="delete-question"
                                     data-id="${q.id}"
@@ -2098,6 +2106,14 @@ async function showQuestionDetails(
                     ${
                         canManageQuestion(q)
                             ? `
+                                <button
+                                    class="btn secondary small"
+                                    data-action="edit-question"
+                                    data-id="${q.id}"
+                                >
+                                    Edit
+                                </button>
+
                                 <button
                                     class="btn danger small"
                                     data-action="delete-question"
@@ -3399,6 +3415,26 @@ function openModal(
 
 function getModalFields(type) {
 
+    if (type === "edit-question") {
+
+        return `
+            <div class="form-group">
+                <label>Question title</label>
+                <input name="title" required maxlength="200" placeholder="Question title">
+            </div>
+
+            <div class="form-group">
+                <label>Question details</label>
+                <textarea name="body" required maxlength="5000" placeholder="Describe your question..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Category</label>
+                <input name="category" maxlength="100" placeholder="General">
+            </div>
+        `;
+    }
+
     if (type === "answer") {
 
         return `
@@ -3607,6 +3643,36 @@ if (modalForm) {
 
             try {
 
+                /* EDIT QUESTION */
+
+                if (type === "edit-question") {
+
+                    const questionId = Number(
+                        modalForm.dataset.questionId
+                    );
+
+                    if (!Number.isInteger(questionId)) {
+                        throw new Error("Invalid question.");
+                    }
+
+                    await apiRequest(
+                        `/questions/${questionId}`,
+                        {
+                            method: "PUT",
+                            body: JSON.stringify({
+                                title: String(data.get("title") || "").trim(),
+                                body: String(data.get("body") || "").trim(),
+                                category: String(data.get("category") || "General").trim() || "General"
+                            })
+                        }
+                    );
+
+                    closeModal();
+                    showToast("Question updated successfully.");
+                    await showQuestionDetails(questionId);
+                    return;
+                }
+
                 /* ANSWER */
 
                 if (type === "answer") {
@@ -3777,6 +3843,41 @@ if (modalForm) {
 /* =========================================================
    QUESTION VOTING
 ========================================================= */
+
+async function editQuestion(questionId) {
+
+    if (!requireLogin()) {
+        return;
+    }
+
+    const id = Number(questionId);
+    if (!Number.isInteger(id)) {
+        showToast("Invalid question.");
+        return;
+    }
+
+    try {
+        const question = await apiRequest(`/questions/${id}`);
+
+        if (!canManageQuestion(question)) {
+            showToast("You do not have permission to edit this question.");
+            return;
+        }
+
+        openModal("Edit Question", "edit-question");
+        modalForm.dataset.questionId = id;
+
+        const titleInput = modalFields.querySelector('[name="title"]');
+        const bodyInput = modalFields.querySelector('[name="body"]');
+        const categoryInput = modalFields.querySelector('[name="category"]');
+
+        if (titleInput) titleInput.value = question.title || "";
+        if (bodyInput) bodyInput.value = question.body || "";
+        if (categoryInput) categoryInput.value = question.category || "General";
+    } catch (error) {
+        showToast(error.message || "Could not load the question.");
+    }
+}
 
 async function deleteQuestion(questionId) {
 
@@ -4488,6 +4589,15 @@ document.addEventListener(
                 "question",
                 id
             );
+
+        }
+
+
+        else if (
+            type === "edit-question"
+        ) {
+
+            editQuestion(id);
 
         }
 
