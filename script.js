@@ -765,7 +765,7 @@ function showDashboard() {
         ? '<button class="store-dark-btn" data-action="ask-question">Ask a question</button>'
         : '<button class="store-dark-btn" data-action="login">Login / Register</button>';
 
-    content.innerHTML = \`
+    content.innerHTML = `
         <section class="store-home">
 
             <div class="store-announcement">
@@ -802,7 +802,7 @@ function showDashboard() {
                     </div>
 
                     <div class="store-actions">
-                        \${welcomeAction}
+                        ${welcomeAction}
                         <button class="store-outline-btn" data-page="questions">Browse questions</button>
                     </div>
 
@@ -1005,7 +1005,7 @@ function showDashboard() {
             </section>
 
         </section>
-    \`;
+    `;
 
     updateRightSidebar();
 
