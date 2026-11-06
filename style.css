@@ -1678,3 +1678,395 @@ button {
         flex-direction: column-reverse;
     }
 }
+
+
+/* =========================================================
+   EDULINK — MODERN STORE-STYLE INTERFACE
+   Inspired by clean commerce catalog layouts:
+   editorial header, spacious cards, filter rails and
+   product-style content grids adapted for a student hub.
+========================================================= */
+
+:root {
+  --bg: #f8f7f4;
+  --white: #ffffff;
+  --text: #171717;
+  --muted: #747474;
+  --light: #a3a3a3;
+  --border: #e8e5df;
+  --primary: #111111;
+  --primary-light: #f0eee9;
+  --green: #2f7d5b;
+  --danger: #b42318;
+  --shadow: 0 8px 30px rgba(20, 20, 20, .06);
+  --radius: 4px;
+}
+
+/* Page */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.topbar {
+  height: 76px;
+  padding: 0 38px;
+  gap: 34px;
+  background: rgba(255,255,255,.96);
+  border-bottom: 1px solid #e5e2dc;
+}
+
+.brand {
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.brand-mark {
+  width: 31px;
+  height: 31px;
+  border-radius: 50%;
+  background: #111;
+  color: #fff;
+}
+
+.search-box {
+  max-width: 560px;
+  height: 40px;
+  background: #f5f4f1;
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+
+.search-box:focus-within {
+  background: #fff;
+  border-color: #cfcac1;
+}
+
+.search-box kbd {
+  display: none;
+}
+
+.icon-btn {
+  border-radius: 50%;
+  color: #222;
+}
+
+.profile-mini {
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-size: 11px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #ddd8cf;
+  background: #f5f3ee;
+  color: #222;
+}
+
+/* Three-column catalog-style shell */
+.layout {
+  max-width: 1500px;
+  grid-template-columns: 220px minmax(0, 1fr) 255px;
+  gap: 30px;
+  padding: 30px 38px 50px;
+}
+
+.sidebar {
+  top: 100px;
+}
+
+.nav-title {
+  font-size: 9px;
+  letter-spacing: .18em;
+  color: #9a968f;
+}
+
+.nav-item {
+  border-radius: 2px;
+  padding: 11px 10px;
+  color: #676767;
+  font-size: 13px;
+}
+
+.nav-item:hover {
+  background: #eeece7;
+  color: #111;
+}
+
+.nav-item.active {
+  background: #111;
+  color: #fff;
+}
+
+.nav-item.active span {
+  color: #fff;
+}
+
+.sidebar-communities {
+  border-top-color: #dedad2;
+}
+
+.main-content {
+  min-width: 0;
+}
+
+/* Headers become editorial/catalog sections */
+.page-header {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #dedad2;
+  border-radius: 0;
+  padding: 4px 0 20px;
+  margin-bottom: 22px;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -.03em;
+}
+
+.page-header p {
+  color: #777;
+}
+
+.header-row {
+  align-items: flex-end;
+}
+
+/* Content cards */
+.item,
+.profile-card,
+.welcome-panel,
+.quick-links,
+.empty-card,
+.info-card {
+  background: #fff;
+  border: 1px solid #e5e1da;
+  border-radius: 2px;
+  box-shadow: none;
+}
+
+.item {
+  padding: 22px;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.item h3 {
+  font-size: 17px;
+  font-weight: 650;
+}
+
+.item-meta {
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  font-size: 10px;
+}
+
+.item-actions {
+  margin-top: 17px;
+}
+
+.btn {
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.btn.primary {
+  background: #111;
+  color: #fff;
+}
+
+.btn.primary:hover {
+  background: #2d2d2d;
+}
+
+.btn.secondary {
+  background: #f1efeb;
+  color: #222;
+}
+
+.btn.danger {
+  background: #f8e9e7;
+  color: #9d271d;
+}
+
+/* Dashboard */
+.welcome-grid {
+  gap: 24px;
+}
+
+.welcome-panel,
+.quick-links {
+  padding: 30px;
+  border-radius: 2px;
+}
+
+.welcome-panel h1 {
+  font-size: 34px;
+  font-weight: 500;
+  letter-spacing: -.04em;
+}
+
+.action-row {
+  margin-top: 22px;
+}
+
+/* Right rail */
+.info-card {
+  margin-bottom: 18px;
+}
+
+.card-title {
+  padding: 15px 17px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+.right-empty {
+  padding: 22px 17px;
+}
+
+/* Forms */
+.form-group input,
+.form-group textarea,
+.form-group select {
+  border-radius: 2px;
+  background: #fbfaf8;
+  border-color: #ddd9d1;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #111;
+}
+
+/* Question/detail hero */
+.item h1 {
+  letter-spacing: -.03em;
+}
+
+/* Answers */
+.answer {
+  background: #faf9f7;
+  border-left-color: #d8d3ca;
+}
+
+/* Login */
+.login-screen {
+  background:
+    linear-gradient(rgba(248,247,244,.94), rgba(248,247,244,.94)),
+    radial-gradient(circle at 15% 20%, #e8e3d9 0, transparent 30%),
+    radial-gradient(circle at 85% 80%, #e2ddd3 0, transparent 30%);
+}
+
+.auth-card {
+  max-width: 450px;
+  border-radius: 2px;
+  border-color: #ddd8cf;
+  box-shadow: 0 18px 60px rgba(0,0,0,.08);
+}
+
+.auth-brand h1 {
+  font-weight: 500;
+  letter-spacing: -.03em;
+}
+
+.auth-brand .brand-mark {
+  background: #111;
+}
+
+/* Modal */
+.modal {
+  border-radius: 3px;
+}
+
+.modal-header {
+  padding: 20px 22px;
+}
+
+.modal-header h2 {
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: 190px minmax(0,1fr);
+  }
+
+  .rightbar {
+    display: none;
+  }
+
+  .topbar {
+    padding: 0 22px;
+  }
+}
+
+@media (max-width: 760px) {
+  .topbar {
+    height: 64px;
+    padding: 0 14px;
+    gap: 12px;
+  }
+
+  .search-box {
+    display: none;
+  }
+
+  .profile-name {
+    display: none;
+  }
+
+  .layout {
+    display: block;
+    padding: 20px 15px 40px;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 64px;
+    width: 280px;
+    height: calc(100vh - 64px);
+    background: #fff;
+    z-index: 300;
+    padding: 20px;
+    border-right: 1px solid #ddd8cf;
+    transform: translateX(-105%);
+    transition: transform .2s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .page-header h1 {
+    font-size: 27px;
+  }
+
+  .welcome-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome-panel h1 {
+    font-size: 29px;
+  }
+}
