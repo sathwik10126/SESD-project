@@ -5076,3 +5076,49 @@ async function initialize() {
 ========================================================= */
 
 initialize();
+
+
+/* =========================================================
+   PROFESSIONAL THEME TOGGLE
+========================================================= */
+
+(function initEduLinkTheme() {
+    const root = document.documentElement;
+    const toggle = document.getElementById("themeToggle");
+
+    if (!toggle) return;
+
+    const saved = localStorage.getItem("edulink-theme");
+    if (saved === "dark" || saved === "light") {
+        root.setAttribute("data-theme", saved);
+    }
+
+    const updateIcon = () => {
+        const theme = root.getAttribute("data-theme");
+        toggle.textContent = theme === "dark" ? "☀" : "◐";
+        toggle.setAttribute(
+            "aria-label",
+            theme === "dark" ? "Switch to light mode" : "Switch to dark mode"
+        );
+    };
+
+    updateIcon();
+
+    toggle.addEventListener("click", () => {
+        const current = root.getAttribute("data-theme");
+        const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+        let next;
+        if (current === "dark") {
+            next = "light";
+        } else if (current === "light") {
+            next = "dark";
+        } else {
+            next = systemDark ? "light" : "dark";
+        }
+
+        root.setAttribute("data-theme", next);
+        localStorage.setItem("edulink-theme", next);
+        updateIcon();
+    });
+})();
