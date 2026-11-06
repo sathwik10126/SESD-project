@@ -73,6 +73,12 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
             detail="Invalid email or password",
         )
 
+    if user.role != data.role:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f"This account is registered as {user.role}. Please select {user.role} to continue.",
+        )
+
     return auth_response(user)
 
 
